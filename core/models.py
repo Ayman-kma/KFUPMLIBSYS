@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import constraints
 from django.utils.translation import gettext_lazy as _
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -27,6 +28,7 @@ def current_year():
 
 def max_value_current_year(value):
     return MaxValueValidator(current_year())(value)
+
 class Book(models.Model):
     ISBN_code = models.CharField(
         unique=True,
@@ -93,7 +95,7 @@ class Book(models.Model):
         verbose_name_plural = _("books")
 
         ordering = [
-            "publish_year",
+            "publication_year",
             "book_title",
         ]
 
@@ -112,86 +114,103 @@ class Book_Item(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=False,
-        verbose_name=_("books"),
+        verbose_name=_("book"),
     )
     book_copy_number = models.PositiveIntegerField(
         verbose_name=_("book copy number")
      )
-    
-    @property
-    def is_loaned(self):
-        self.book.fetch_related("Book_Loan") ##!!
-        return None
+    loan_status = models.BooleanField(
+        verbose_name=_("loan status")
+    )
+
+    class Meta:
+        verbose_name = _("book item")
+        verbose_name_plural = _("book items")
+
+        ordering = [
+            "bar_code",
+            "book",
+        ]
+
+    def __str__(self):
+        return self.bar_code
 
 class Book_Loan(models.Model):
+    borrower = models.ForeignKey(
+        Library_People,
+        on_delete= models.CASCADE,
+        verbose_name= _("issued by")
+    )
 
-    books = models.ForeignKey(
+    book_item = models.ForeignKey(
+        Book_Item,
+        on_delete= models.CASCADE,
+        verbose_name= _("book item")
+    )
+
+    borrowed_from = models.DateField(
+        verbose_name=_("borrowed from"),
+        null = False,
+    )
+    borrowed_to = models.DateField(
+        verbose_name=_("borrowed to"),
+        null = False,
+    )
+
+    actual_return = models.DateField(
+        verbose_name=_("borrowed to"),
+        null = True,
+        blank = True,
+    )
+
+    issued_by = models.ForeignKey(
+        Library_People,
+        on_delete= models.CASCADE,
+        verbose_name= _("issued by")
+    )
+
+    class Meta:
+        constraints = [
+            # This constraint assuers that the borrower, bar_code,
+            # and borrowed from are unique in the table.
+            models.UniqueConstraint(
+                fields= ["borrower", "book_item", "borrowed_from"],
+                name= "unique composite primary key",
+                ),
+        ]
+        verbose_name = _("book loan")
+        verbose_name_plural = _("book loans")
+        ordering = [
+            "borrowed_from",
+        ]
+
+
+class Book_Reserve(models.Model):
+    borrower = models.ForeignKey(
+        Library_People,
+        on_delete= models.CASCADE,
+        verbose_name= _("borrower")
+    )
+
+    book = models.ForeignKey(
         Book, # Check this later
         on_delete=models.CASCADE,
         blank=True,
         null=False,
-        verbose_name=_("items"),
+        verbose_name=_("book"),
     )
 
-    @property
-    def total_price(self):
-        total_price = 0
-        for item in self.items.all():
-            total_price += (item.quantity * item.price)
-
-    class Meta:
-        verbose_name = _("order")
-        verbose_name_plural = _("orders")
-        ordering = [
-            "items",
-        ]
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.PROTECT,
-        db_index=True,
-        verbose_name=_("user"),
+    reserve_date = models.DateField(
+        verbose_name=_("reserve date"),
     )
-    @property
-    def full_name(self):
-        return self.user.first_name + self.user.last_name
-    
-    @property
-    def username(self):
-        return self.user.username
 
-
-    orders = models.ForeignKey(
-    Order,
-    on_delete=models.CASCADE,
-    blank=True,
-    null=False,
-    verbose_name=_("orders"),
-)
-
-    @property
-    def total_payments(self):
-        total_payments = 0
-        for order in self.orders.all():
-            total_payments += order.total_price
-
-        return total_payments
-
-    @property
-    def points(self):
-        # I will assume that each dollar of payment is equal to the total points
-        return self.total_payments
+    reserve_status = models.BooleanField(
+        verbose_name=_("reserve status")
+    )
 
     class Meta:
-        verbose_name = _("profile")
-        verbose_name_plural = _("profiles")
-
+        verbose_name = _("book reserve")
+        verbose_name_plural = _("book reserves")
         ordering = [
-            "orders",
-            "user",
+            "reserve_date",
         ]
-
-    def __str__(self):
-        return self.full_name
