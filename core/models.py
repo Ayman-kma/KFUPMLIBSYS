@@ -10,9 +10,14 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Library_Actor(models.Model):
-    Actor_Type = models.integer_field(
+    Actor_Type = models.IntegerField(
         unique=True,
         primary_key=True,
+        null=False,
+        blank=False
+    )
+    designation = models.CharField(
+        max_length=20,
         null=False,
         blank=False
     )
@@ -20,24 +25,28 @@ class Library_Actor(models.Model):
 
 class Library_People(models.Model):
     # People_ID????
-    People_ID = models.integer_field(
+    People_ID = models.IntegerField(
         unique=True,
         primary_key=True,
-        max_length=8,
+        max_length=10,
         null=False,
         blank=False,
         # verbose_name=_("")
     )
-    First_Name = models.CharField(
-        max_length=256,
-        blank=False,
-        null=False
-    )
-    Last_Name = models.CharField(
-        max_length=256,
-        blank=False,
-        null=False
-    )
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             null=True,
+                             blank=True,
+                             verbose_name=_("subject"))
+
+    @property
+    def First_Name(self):
+        return self.user.first_name
+
+    @property
+    def Last_Name(self):
+        return self.user.last_name
+
     People_Type = models.ForeignKey(
         Library_Actor,
         on_delete=models.CASCADE,
@@ -47,7 +56,7 @@ class Library_People(models.Model):
     Birth_Date = models.DateField(
         blank=True,
         null=True,
-        verbose_name=_("publish date")
+        verbose_name=_("birth date")
     )
     SEX_CHOICES = (
         ('M', 'Male',),
@@ -65,16 +74,22 @@ class Library_People(models.Model):
         blank=True,
         null=True
     )
-    Contact_Number = models.phonenumber_field(blank=True, null=True)
+    Contact_Number = PhoneNumberField(blank=True, null=True)
 
-    Email = models.CharField(
-        max_length=256,
-        blank=True,
-        null=True
-    )
+    @property
+    def Email(self):
+        return self.user.email
 
 
 class Subject(models.Model):
+    Subject_Id = models.IntegerField(
+        unique=True,
+        primary_key=True,
+        max_length=200,
+        null=False,
+        blank=False,
+        # verbose_name=_("")
+    )
     subject_name = models.CharField(
         max_length=512,
         blank=False,
@@ -138,15 +153,14 @@ class Book(models.Model):
     @property
     def is_available(self):
         return self.no_of_copies > 0
-
+        # Fun Fact: Django ManyToManyField fields are automatically mapped into seperate tabels
     authors = models.ManyToManyField(
         Library_People,
-        on_delete=models.CASCADE,
-        max_length=32,
         blank=True,
         null=False,
         verbose_name=_("authors"),
     )  # RECHECK THIS
+    # TRUE
 
     publication_year = models.PositiveIntegerField(
         default=current_year(),
@@ -186,9 +200,14 @@ class Book_Item(models.Model):
     book_copy_number = models.PositiveIntegerField(
         verbose_name=_("book copy number")
     )
-    loan_status = models.BooleanField(
-        verbose_name=_("loan status")
-    )
+
+    @property
+    def loan_status(self):
+        loans = Book_Loan.objects.all(bar_code=self.bar_code)
+        for loan in loans:
+            if (loan.actual_return_date is None):
+                return False
+        return True
 
     class Meta:
         verbose_name = _("book item")
@@ -225,8 +244,8 @@ class Book_Loan(models.Model):
         null=False,
     )
 
-    actual_return = models.DateField(
-        verbose_name=_("borrowed to"),
+    actual_return_date = models.DateField(
+        verbose_name=_("actual return date"),
         null=True,
         blank=True,
     )
@@ -277,7 +296,7 @@ class Book_Reserve(models.Model):
 
     reserve_status = models.BooleanField(
         verbose_name=_("reserve status")
-    )
+    )  # Leave as is for now
 
     class Meta:
         constraints = [
@@ -294,8 +313,9 @@ class Book_Reserve(models.Model):
             "reserve_date",
         ]
 
+
 class Book_Shelf(models.Model):
-    Shelf_ID = models.integer_field(
+    Shelf_ID = models.IntegerField(
         unique=True,
         primary_key=True,
         null=False,
@@ -306,6 +326,6 @@ class Book_Shelf(models.Model):
         max_length=4,
         # verbose_name=_("")
     )
-    Floor_No = models.integer_field(
+    Floor_No = models.IntegerField(
         # verbose_name=_("")
     )
