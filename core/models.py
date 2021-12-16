@@ -1,15 +1,83 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
-class Subject(models.Model):
-    subject_name= models.CharField(
-        max_length= 512,
-        blank= False,
-        null = False
+
+class Library_Actor(models.Model):
+    Actor_Type = models.integer_field(
+        unique=True,
+        primary_key=True,
+        null=False,
+        blank=False
     )
+
+
+class Library_People(models.Model):
+    # People_ID????
+    People_ID = models.integer_field(
+        unique=True,
+        primary_key=True,
+        max_length=8,
+        null=False,
+        blank=False,
+        # verbose_name=_("")
+    )
+    First_Name = models.CharField(
+        max_length=256,
+        blank=False,
+        null=False
+    )
+    Last_Name = models.CharField(
+        max_length=256,
+        blank=False,
+        null=False
+    )
+    People_Type = models.ForeignKey(
+        Library_Actor,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,)
+
+    Birth_Date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name=_("publish date")
+    )
+    SEX_CHOICES = (
+        ('M', 'Male',),
+        ('F', 'Female',),
+    )
+    sex = models.CharField(
+        max_length=1,
+        choices=SEX_CHOICES,
+        null=False,
+        blank=False,
+    )
+
+    Department = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True
+    )
+    Contact_Number = models.phonenumber_field(blank=True, null=True)
+
+    Email = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True
+    )
+
+
+class Subject(models.Model):
+    subject_name = models.CharField(
+        max_length=512,
+        blank=False,
+        null=False
+    )
+
     class Meta:
         verbose_name = _("subject")
         verbose_name_plural = _("subjects")
@@ -17,21 +85,22 @@ class Subject(models.Model):
             "subject_name",
         ]
 
+
 class Book(models.Model):
     ISBN_code = models.CharField(
         unique=True,
         primary_key=True,
         max_length=64,
-        null = False,
-        blank= False,
-        verbose_name= _("ISBN code")
+        null=False,
+        blank=False,
+        verbose_name=_("ISBN code")
     )
 
     book_title = models.CharField(
-    max_length=512,
-    blank=False,
-    null=False,
-    verbose_name=_("book title"),
+        max_length=512,
+        blank=False,
+        null=False,
+        verbose_name=_("book title"),
     )
 
     book_language = models.CharField(
@@ -42,14 +111,14 @@ class Book(models.Model):
     )
 
     author_name = models.CharField(
-    max_length=32,
-    blank=True,
-    null=False,
-    verbose_name=_("author name"),
+        max_length=32,
+        blank=True,
+        null=False,
+        verbose_name=_("author name"),
     )
 
     price = models.DecimalField(
-        decimal_places= 2,
+        decimal_places=2,
         max_digits=5,
         blank=True,
         null=False,
@@ -57,17 +126,15 @@ class Book(models.Model):
     )
 
     publish_date = models.DateField(
-        blank= True,
-        null = True,
-        verbose_name= _("publish date")
+        blank=True,
+        null=True,
+        verbose_name=_("publish date")
     )
     cover = models.ImageField(
-        blank= True,
-        null = False,
-        verbose_name= _("cover")
+        blank=True,
+        null=False,
+        verbose_name=_("cover")
     )
-
-
 
     class Meta:
         verbose_name = _("book")
@@ -82,11 +149,10 @@ class Book(models.Model):
         return self.name
 
 
-
 class Book_Loan(models.Model):
 
     books = models.ForeignKey(
-        Book, # Check this later
+        Book,  # Check this later
         on_delete=models.CASCADE,
         blank=True,
         null=False,
@@ -107,6 +173,23 @@ class Book_Loan(models.Model):
         ]
 
 
+class Book_Shelf(models.Model):
+    Shelf_ID = models.integer_field(
+        unique=True,
+        primary_key=True,
+        null=False,
+        blank=False,
+        verbose_name=_("ISBN code")
+    )
+    Shelf_No = models.CharField(
+        max_length=4,
+        # verbose_name=_("")
+    )
+    Floor_No = models.integer_field(
+        # verbose_name=_("")
+    )
+
+
 class Profile(models.Model):
     user = models.OneToOneField(
         User,
@@ -114,22 +197,22 @@ class Profile(models.Model):
         db_index=True,
         verbose_name=_("user"),
     )
+
     @property
     def full_name(self):
         return self.user.first_name + self.user.last_name
-    
+
     @property
     def username(self):
         return self.user.username
 
-
     orders = models.ForeignKey(
-    Order,
-    on_delete=models.CASCADE,
-    blank=True,
-    null=False,
-    verbose_name=_("orders"),
-)
+        Order,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=False,
+        verbose_name=_("orders"),
+    )
 
     @property
     def total_payments(self):
