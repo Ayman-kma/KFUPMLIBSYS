@@ -28,7 +28,6 @@ class Library_People(models.Model):
     People_ID = models.IntegerField(
         unique=True,
         primary_key=True,
-        max_length=10,
         null=False,
         blank=False,
         # verbose_name=_("")
@@ -85,7 +84,6 @@ class Subject(models.Model):
     Subject_Id = models.IntegerField(
         unique=True,
         primary_key=True,
-        max_length=200,
         null=False,
         blank=False,
         # verbose_name=_("")
@@ -157,7 +155,6 @@ class Book(models.Model):
     authors = models.ManyToManyField(
         Library_People,
         blank=True,
-        null=False,
         verbose_name=_("authors"),
     )  # RECHECK THIS
     # TRUE
@@ -226,7 +223,7 @@ class Book_Loan(models.Model):
     borrower = models.ForeignKey(
         Library_People,
         on_delete=models.CASCADE,
-        verbose_name=_("issued by")
+        verbose_name=_("borrower")
     )
 
     book_item = models.ForeignKey(
@@ -262,7 +259,7 @@ class Book_Loan(models.Model):
             # and borrowed from are unique in the table.
             models.UniqueConstraint(
                 fields=["borrower", "book_item", "borrowed_from"],
-                name="unique composite primary key",
+                name="unique composite Book_Loan primary key",
             ),
         ]
         verbose_name = _("book loan")
@@ -304,7 +301,7 @@ class Book_Reserve(models.Model):
             # and borrowed from are unique in the table.
             models.UniqueConstraint(
                 fields=["borrower", "book"],
-                name="unique composite primary key",
+                name="unique composite Book_Reserve primary key",
             ),
         ]
         verbose_name = _("book reserve")
