@@ -10,7 +10,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Library_Actor(models.Model):
-    Actor_Type = models.IntegerField(
+    Actor_Type = models.PositiveIntegerField(
         unique=True,
         primary_key=True,
         null=False,
@@ -22,9 +22,10 @@ class Library_Actor(models.Model):
         blank=False
     )
 
+
 class Library_People(models.Model):
     # People_ID????
-    People_ID = models.IntegerField(
+    People_ID = models.PositiveIntegerField(
         unique=True,
         primary_key=True,
         null=False,
@@ -78,8 +79,12 @@ class Library_People(models.Model):
     def Email(self):
         return self.user.email
 
+    def __str__(self):
+        return "ID: " + str(self.People_ID) + "\tName: " + self.First_Name
+
+
 class Subject(models.Model):
-    Subject_Id = models.IntegerField(
+    Subject_Id = models.PositiveIntegerField(
         unique=True,
         primary_key=True,
         null=False,
@@ -91,6 +96,9 @@ class Subject(models.Model):
         blank=False,
         null=False
     )
+
+    def __str__(self):
+        return self.subject_name
 
     class Meta:
         verbose_name = _("subject")
@@ -124,8 +132,12 @@ class Book(models.Model):
         null=False,
         verbose_name=_("book title"),
     )
-
+    Lang_CHOICES = (
+        ('A', 'Arabic',),
+        ('E', 'English',),
+    )
     book_language = models.CharField(
+        choices=Lang_CHOICES,
         max_length=20,
         blank=True,
         null=True,
@@ -214,7 +226,7 @@ class Book_Item(models.Model):
         ]
 
     def __str__(self):
-        return self.bar_code
+        return self.book.book_title + self.bar_code
 
 
 class Book_Loan(models.Model):
@@ -310,7 +322,7 @@ class Book_Reserve(models.Model):
 
 
 class Book_Shelf(models.Model):
-    Shelf_ID = models.IntegerField(
+    Shelf_ID = models.PositiveIntegerField(
         unique=True,
         primary_key=True,
         null=False,
@@ -321,6 +333,6 @@ class Book_Shelf(models.Model):
         max_length=4,
         # verbose_name=_("")
     )
-    Floor_No = models.IntegerField(
+    Floor_No = models.PositiveIntegerField(
         # verbose_name=_("")
     )
