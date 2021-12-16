@@ -245,11 +245,11 @@ class Book_Loan(models.Model):
         blank=True,
     )
 
-    issued_by = models.ForeignKey(
-        Library_People,
-        on_delete=models.CASCADE,
-        verbose_name=_("issued by")
-    )
+    # issued_by = models.ForeignKey(
+    #     Library_People,
+    #     on_delete=models.CASCADE,
+    #     verbose_name=_("issued by")
+    # )
 
     class Meta:
         constraints = [
@@ -267,7 +267,7 @@ class Book_Loan(models.Model):
         ]
 
     def __str__(self):
-        return self.bar_code
+        return self.borrower.First_Name
 
 
 class Book_Reserve(models.Model):
