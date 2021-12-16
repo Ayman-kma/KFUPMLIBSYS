@@ -209,6 +209,14 @@ class Book_Reserve(models.Model):
     )
 
     class Meta:
+        constraints = [
+            # This constraint assuers that the borrower, bar_code,
+            # and borrowed from are unique in the table.
+            models.UniqueConstraint(
+                fields= ["borrower", "book"],
+                name= "unique composite primary key",
+                ),
+        ]
         verbose_name = _("book reserve")
         verbose_name_plural = _("book reserves")
         ordering = [
