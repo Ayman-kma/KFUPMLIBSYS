@@ -9,20 +9,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 
-class Library_Actor(models.Model):
-    Actor_Type = models.PositiveIntegerField(
-        unique=True,
-        primary_key=True,
-        null=False,
-        blank=False
-    )
-    designation = models.CharField(
-        max_length=20,
-        null=False,
-        blank=False
-    )
-
-
 class Library_People(models.Model):
     # People_ID????
     People_ID = models.PositiveIntegerField(
@@ -45,12 +31,6 @@ class Library_People(models.Model):
     @property
     def Last_Name(self):
         return self.user.last_name
-
-    People_Type = models.ForeignKey(
-        Library_Actor,
-        on_delete=models.CASCADE,
-        blank=False,
-        null=False,)
 
     Birth_Date = models.DateField(
         blank=True,
@@ -81,6 +61,23 @@ class Library_People(models.Model):
 
     def __str__(self):
         return "ID: " + str(self.People_ID) + "\tName: " + self.First_Name
+
+    class Meta:
+        abstract = True
+
+class Librarian(Library_People):
+    pass
+
+class Member(Library_People):
+    pass
+
+class Author(Library_People):
+    @property
+    def number_of_books(self):
+        return len(Book.objects.all(Author= self))
+
+class System(Library_People):
+    pass
 
 
 class Subject(models.Model):
@@ -163,7 +160,7 @@ class Book(models.Model):
         return self.no_of_copies > 0
         # Fun Fact: Django ManyToManyField fields are automatically mapped into seperate tabels
     authors = models.ManyToManyField(
-        Library_People,
+        Author,
         blank=True,
         verbose_name=_("authors"),
     )  # RECHECK THIS
@@ -231,7 +228,7 @@ class Book_Item(models.Model):
 
 class Book_Loan(models.Model):
     borrower = models.ForeignKey(
-        Library_People,
+        Member,
         on_delete=models.CASCADE,
         verbose_name=_("borrower")
     )
@@ -257,11 +254,13 @@ class Book_Loan(models.Model):
         blank=True,
     )
 
-    # issued_by = models.ForeignKey(
-    #     Library_People,
-    #     on_delete=models.CASCADE,
-    #     verbose_name=_("issued by")
-    # )
+    issued_by = models.ForeignKey(
+        Librarian,
+        default="ID_MAN",
+        on_delete=models.CASCADE,
+        verbose_name=_("issued by"),
+        null=False
+    )
 
     class Meta:
         constraints = [
@@ -279,12 +278,12 @@ class Book_Loan(models.Model):
         ]
 
     def __str__(self):
-        return self.borrower.First_Name
+        return "Book title: " + str(self.book_item.book.book_title) + " Borrower: " + str(self.borrower.First_Name)
 
 
 class Book_Reserve(models.Model):
     borrower = models.ForeignKey(
-        Library_People,
+        Member,
         on_delete=models.CASCADE,
         verbose_name=_("borrower")
     )
