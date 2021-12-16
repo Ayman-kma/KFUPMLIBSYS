@@ -293,3 +293,19 @@ class Book_Reserve(models.Model):
         ordering = [
             "reserve_date",
         ]
+
+class Book_Shelf(models.Model):
+    Shelf_ID = models.integer_field(
+        unique=True,
+        primary_key=True,
+        null=False,
+        blank=False,
+        verbose_name=_("ISBN code")
+    )
+    Shelf_No = models.CharField(
+        max_length=4,
+        # verbose_name=_("")
+    )
+    Floor_No = models.integer_field(
+        # verbose_name=_("")
+    )
