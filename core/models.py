@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+import datetime
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -17,6 +19,14 @@ class Subject(models.Model):
             "subject_name",
         ]
 
+    
+
+def current_year():
+    return datetime.date.today().year
+
+
+def max_value_current_year(value):
+    return MaxValueValidator(current_year())(value)
 class Book(models.Model):
     ISBN_code = models.CharField(
         unique=True,
@@ -38,35 +48,44 @@ class Book(models.Model):
         max_length=20,
         blank=True,
         null=True,
-
+        verbose_name=_("book language")
     )
 
-    author_name = models.CharField(
+    no_of_copies = models.PositiveIntegerField(
+        null = True, 
+        blank= True,
+        verbose_name= _("number of copies")
+    )
+
+    subject = models.ForeignKey(
+        Subject,
+        on_delete= models.CASCADE,
+        null= True,
+        blank= True,
+        verbose_name=_("subject")
+    )
+
+    @property
+    def is_available(self):
+        return self.no_of_copies > 0
+    
+    authors = models.ManyToManyField(
+    Library_People,
+    on_delete= models.CASCADE,
     max_length=32,
     blank=True,
     null=False,
-    verbose_name=_("author name"),
-    )
+    verbose_name=_("authors"),
+    ) ## RECHECK THIS
 
-    price = models.DecimalField(
-        decimal_places= 2,
-        max_digits=5,
-        blank=True,
-        null=False,
-        verbose_name=_("price"),
-    )
 
-    publish_date = models.DateField(
+    publication_year = models.PositiveIntegerField(
+        default=current_year(),
+        validators=[MinValueValidator(1800), max_value_current_year],
         blank= True,
         null = True,
-        verbose_name= _("publish date")
+        verbose_name= _("publication year")
     )
-    cover = models.ImageField(
-        blank= True,
-        null = False,
-        verbose_name= _("cover")
-    )
-
 
 
     class Meta:
@@ -74,14 +93,35 @@ class Book(models.Model):
         verbose_name_plural = _("books")
 
         ordering = [
-            "publish_date",
-            "name",
+            "publish_year",
+            "book_title",
         ]
 
     def __str__(self):
-        return self.name
+        return self.book_title
 
-
+class Book_Item(models.Model):
+    bar_code = models.CharField(
+        max_length=32,
+        unique=True,
+        primary_key=True,
+        verbose_name= _("bar code")
+    )
+    book = models.ForeignKey(
+        Book, # Check this later
+        on_delete=models.CASCADE,
+        blank=True,
+        null=False,
+        verbose_name=_("books"),
+    )
+    book_copy_number = models.PositiveIntegerField(
+        verbose_name=_("book copy number")
+     )
+    
+    @property
+    def is_loaned(self):
+        self.book.fetch_related("Book_Loan") ##!!
+        return None
 
 class Book_Loan(models.Model):
 
