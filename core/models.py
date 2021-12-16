@@ -22,7 +22,6 @@ class Library_Actor(models.Model):
         blank=False
     )
 
-
 class Library_People(models.Model):
     # People_ID????
     People_ID = models.IntegerField(
@@ -36,7 +35,7 @@ class Library_People(models.Model):
                              on_delete=models.CASCADE,
                              null=True,
                              blank=True,
-                             verbose_name=_("subject"))
+                             verbose_name=_("user"))
 
     @property
     def First_Name(self):
@@ -78,7 +77,6 @@ class Library_People(models.Model):
     @property
     def Email(self):
         return self.user.email
-
 
 class Subject(models.Model):
     Subject_Id = models.IntegerField(
