@@ -218,7 +218,7 @@ class Book_Item(models.Model):
 
     @property
     def loan_status(self):
-        loans = Book_Loan.objects.all(bar_code=self.bar_code)
+        loans = Book_Loan.objects.filter(book_item=self)
         for loan in loans:
             if (loan.actual_return_date is None):
                 return False
@@ -275,10 +275,10 @@ class Book_Loan(models.Model):
 
     issued_by = models.ForeignKey(
         Librarian,
-        default="ID_MAN",
         on_delete=models.CASCADE,
         verbose_name=_("issued by"),
-        null=False
+        null=True,
+        blank = True
     )
 
     class Meta:

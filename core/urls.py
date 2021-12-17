@@ -6,6 +6,8 @@ from . import views
 app_name = "core"
 
 urlpatterns = [
-    path("", views.index, name= "home-index"),
-    path("register-new-member/", views.register_new_member, name= "register-new-member")
+    path("", views.index, name= "homeIndex"),
+    path("register-new-member/", views.register_new_member, name= "register-new-member"),
+    path("borrow/", views.borrow, name= "borrow"),
+    path("<str:book_item>/borrowed-successful/", views.borrowed_successful, name= "borrowed-successful"),
 ]

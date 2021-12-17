@@ -1,11 +1,14 @@
 {% extends "core/base.html" %}
-
 {% load user_types %}
 
 {% block content%} 
 
 
-{% if user.is_authenticated and user|belongs_to_librarian %}
+{% if user.is_authenticated and user|belongs_to_member %}
+<h1>You have borrowed the book {{book_item.book.book_title}} as {{user.first_name}}</h1>
+
+<h3> Please pass by the library to pick up and issue your book </h3>
+
 
 
 {% else %}

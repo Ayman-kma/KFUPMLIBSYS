@@ -10,6 +10,7 @@
 <h1><a href="">Cancel an Existant Member Account</a></h1>
 <h1><a href="">Add/Remove/modefiy Book</a></h1>
 <h1><a href="">Add/Remove/modefiy Book_Item</a></h1>
+<h1><a href="">Issue a Book Loan For a student</a></h1>
 <h1><a href="">Request A book</a></h1>
 <h1><a href="">View Reports</a></h1>
 
@@ -17,7 +18,7 @@
 {% elif user.is_authenticated and user|belongs_to_member %}
 {% comment %} If the user is a member {% endcomment %}
 <h1><a href="">Search Book Catalog</a></h1>
-<h1><a href="">Borrow a Book</a></h1>
+<h1><a href="{% url 'core:borrow' %}">Borrow a Book</a></h1>
 <h1><a href="">Reserve a Book</a></h1>
 <h1><a href="">Return a Book</a></h1>
 <h1><a href="">Renew a Book</a></h1>
