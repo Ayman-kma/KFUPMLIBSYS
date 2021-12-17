@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -65,16 +66,20 @@ class Library_People(models.Model):
     class Meta:
         abstract = True
 
+
 class Librarian(Library_People):
     pass
+
 
 class Member(Library_People):
     pass
 
+
 class Author(Library_People):
     @property
     def number_of_books(self):
-        return len(Book.objects.all(Author= self))
+        return len(Book.objects.all(Author=self))
+
 
 class System(Library_People):
     pass
@@ -201,8 +206,14 @@ class Book_Item(models.Model):
         null=False,
         verbose_name=_("book"),
     )
+
+    def clean(self):
+        if self.book_copy_number > self.book.no_of_copies:
+            raise ValidationError(
+                _('book copy number must be less than number of copies'))
+
     book_copy_number = models.PositiveIntegerField(
-        verbose_name=_("book copy number")
+        verbose_name=_("book copy number"),
     )
 
     @property
