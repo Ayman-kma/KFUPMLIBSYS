@@ -1,4 +1,5 @@
-{% extends "core/base.html" %} {% block content %} {% for book in books %}
+{% extends "core/base.html" %} {% block content%} {% if user.is_authenticated %}
+{% for book in books %}
 <article class="media content-section">
   <div class="media-body">
     <div class="article-metadata">
@@ -9,4 +10,4 @@
     <p class="article-content">{{ book.book_title }}</p>
   </div>
 </article>
-{% endfor %} {% endblock content %}
+{% endfor %}{% endif %} {% endblock content %}

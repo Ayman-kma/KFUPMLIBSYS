@@ -1,0 +1,3 @@
+Assumptions:
+1- only the superuser can create accounts for librarians via the admin page.
+2- Both superuser and librarians create accouts for members. 
