@@ -8,3 +8,8 @@ def index(request):
         'books': Book.objects.all()
     }
     return render(request, 'core/index.html', context)
+
+
+def register_new_member(request):
+    context = {}
+    return render(request, 'core/register-new-member.html', context)
