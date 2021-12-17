@@ -1,13 +1,44 @@
-{% extends "core/base.html" %} {% block content%} {% if user.is_authenticated %}
-{% for book in books %}
-<article class="media content-section">
-  <div class="media-body">
-    <div class="article-metadata">
-      <a class="mr-2" href="#">{{ book.book_title }}</a>
-      <small class="text-muted">{{ book.ISBN_code }}</small>
-    </div>
-    <h2><a class="article-title" href="#">{{ book.book_title }}</a></h2>
-    <p class="article-content">{{ book.book_title }}</p>
-  </div>
-</article>
-{% endfor %}{% endif %} {% endblock content %}
+{% extends "core/base.html" %}
+{% load user_types %}
+
+{% block content%} 
+
+
+{% if user.is_authenticated and user|belongs_to_librarian %}
+{% comment %} If the user is a librarian {% endcomment %}
+<h1><a href="">Register New Account for a Member</a></h1>
+<h1><a href="">Cancel an Existant Member Account</a></h1>
+<h1><a href="">Add/Remove/modefiy Book</a></h1>
+<h1><a href="">Add/Remove/modefiy Book_Item</a></h1>
+<h1><a href="">Request A book</a></h1>
+<h1><a href="">View Reports</a></h1>
+
+
+{% elif user.is_authenticated and user|belongs_to_member %}
+{% comment %} If the user is a member {% endcomment %}
+<h1><a href="">Search Book Catalog</a></h1>
+<h1><a href="">Borrow a Book</a></h1>
+<h1><a href="">Reserve a Book</a></h1>
+<h1><a href="">Return a Book</a></h1>
+<h1><a href="">Renew a Book</a></h1>
+
+
+{% else %}
+{% comment %} If the user is not loggeed in {% endcomment %}
+
+    {% for book in books %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="#">{{ book.book_title }}</a>
+          <small class="text-muted">{{ book.ISBN_code }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ book.book_title }}</a></h2>
+        <p class="article-content">{{ book.book_title }}</p>
+      </div>
+    </article>
+    {% endfor %}
+
+
+{% endif %}
+{% endblock content %}

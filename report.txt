@@ -1,3 +1,5 @@
 Assumptions:
-1- only the superuser can create accounts for librarians via the admin page.
-2- Both superuser and librarians create accouts for members. 
+1- The System user is the superuser in our case.
+2- only the superuser can create accounts for librarians via the admin page.
+3- Both superuser and librarians create accouts for members.
+4- 
