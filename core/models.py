@@ -225,6 +225,14 @@ class Book_Item(models.Model):
         return True
 
     class Meta:
+        constraints = [
+            # This constraint assuers that the borrower, bar_code,
+            # and borrowed from are unique in the table.
+            models.UniqueConstraint(
+                fields=["book", "book_copy_number"],
+                name="unique book_copy_number for each book",
+            ),
+        ]
         verbose_name = _("book item")
         verbose_name_plural = _("book items")
 
