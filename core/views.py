@@ -24,7 +24,7 @@ def report_get_new_members(request):
     utc=pytz.UTC
     query1= Member.objects.all()
     today_one_year_ago = datetime.datetime.today() - datetime.timedelta(days = 365)
-    valid_members = [x for x in query1 if x.date_joined> utc.localize(today_one_year_ago)]
+    valid_members = [x for x in query1 if x.date_joined> utc.localize(today_one_year_ago) and x.checked_out_books_previously]
     context = {
         'books': Book.objects.all(),
         "members": valid_members,

@@ -36,6 +36,15 @@ class Library_People(models.Model):
     @property
     def date_joined(self):
         return self.user.date_joined
+    @property
+    def checked_out_books_previously(self):
+        member = Member.objects.filter(user=self.user)
+        loans = Book_Loan.objects.filter(borrower= member)[1]
+        print(loans)
+        if len(loans)== 0:
+            return True
+        else:
+            return False
     
     Birth_Date = models.DateField(
         blank=True,
