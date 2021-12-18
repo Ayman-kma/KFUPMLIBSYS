@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% load user_types %}
+
+{% block content%} 
+
+
+{% if user.is_authenticated and user|belongs_to_member %}
+<h1>You Are Logged in as {{user.first_name}}</h1>
+<br>
+<br>
+<br>
+<h2> You have the following books with you: </h2>
+<br>
+{% if loans %}
+{% for loan in loans%}
+<h1>
+    Book Title: {{loan.book_item.book.book_title}}, barcode: {{loan.book_item.bar_code}}
+</h1>
+<h3>
+    Borrow date: {{loan.borrowed_from}}, Due Date: {{loan.borrowed_to}}
+</h3>
+
+<br>
+{%endfor%}
+
+<h1>Please make sure to pass by the library to return the books before thier due date.</h1>
+{%else %}
+<h1>You don't have any current borrows to return</h1>
+
+{%endif%}
+{% else %}
+<h1>You Are not Allowed to View this page</h1>
+<br>
+<h1><a href="{% url 'core:home-index' %}">Go to HomePage From here</a></h1>
+
+{% endif %}
+{% endblock content %}

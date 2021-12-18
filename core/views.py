@@ -78,7 +78,6 @@ def reserve(request):
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
     books = get_valid_reserves()
-    print(books)
     return render(
         request,
         'member/reserve.html',
@@ -116,17 +115,20 @@ def get_valid_reserves():
 
     return valid_books
 
+def get_valid_returns(request):
+    member = Member.objects.filter(user=request.user).first()
+    loans = Book_Loan.objects.filter(borrower=member).prefetch_related("book_item")
+    return loans
 
 def return_book(request):
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
-    books = get_valid_reserves()
-    print(books)
+    loans = get_valid_returns(request)
     return render(
         request,
-        'member/reserve.html',
+        'member/return.html',
         {
-            "books": books,
+            "loans": loans,
             "home_url": home_url
         })
 
@@ -134,3 +136,24 @@ def return_book(request):
 def book_list(request):
     f = BookFilter(request.GET, queryset=Book.objects.all())
     return render(request, 'core/search-form.html', {'filter': f})
+
+def renew_book(request):
+    home_url_list = request.build_absolute_uri().split("/")[:-2]
+    home_url = "/".join(home_url_list)
+    loans = get_valid_returns(request)
+    return render(
+        request,
+        'member/renew.html',
+        {
+            "loans": loans,
+            "home_url": home_url
+        })
+
+def renew_successful(request, loan):
+    loan_instance = get_object_or_404(Book_Loan, pk=loan)
+    print(loan_instance.borrowed_to)
+    today = datetime.date.today()
+    loan_instance.borrowed_to = today + datetime.timedelta(days=90)
+    loan_instance.save()
+    print(loan_instance.borrowed_to)
+    return render(request, 'member/renew-successful.html', {'loan': loan_instance})
