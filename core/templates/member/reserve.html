@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+{% load user_types %}
+
+{% block content%} 
+
+
+{% if user.is_authenticated and user|belongs_to_member %}
+<h1>You Are Logged in as {{user.first_name}}</h1>
+<h3> This borrow will be registered with your name.</h3>
+<br>
+<br>
+<br>
+<h2> Click on a Book to send a reserve request for it: </h2>
+<br>
+{% if books %}
+{% for book in books %}
+<h1><a href="{{home_url}}/{{book.ISBN_code}}/reserve-request">
+    Book Title: {{book.book_title}}
+</a>
+</h1>
+<br>
+{%endfor%}
+{%else %}
+<h1>all books are available in the library nothing can be reserved now</h1>
+
+{%endif%}
+{% else %}
+<h1>You Are not Allowed to View this page</h1>
+<br>
+<h1><a href="{% url 'core:home-index' %}">Go to HomePage From here</a></h1>
+
+{% endif %}
+{% endblock content %}

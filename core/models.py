@@ -323,6 +323,9 @@ class Book_Reserve(models.Model):
         verbose_name=_("reserve status")
     )  # Leave as is for now
 
+    def __str__(self):
+        return "Book title: " + str(self.book.book_title) + " Reserver: " + str(self.borrower.First_Name)
+
     class Meta:
         constraints = [
             # This constraint assuers that the borrower, bar_code,

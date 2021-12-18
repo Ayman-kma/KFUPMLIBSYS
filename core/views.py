@@ -20,6 +20,7 @@ def register_new_member(request):
     context = {}
     return render(request, 'core/register-new-member.html', context)
 
+
 def borrow(request):
  # if this is a POST request we need to process the form data
     valid_book_items = get_valid_book_items()
@@ -72,3 +73,40 @@ def get_valid_book_items():
                 book_codes.add(book_item.book.ISBN_code)
                 valid_book_items.append(book_item)
         return valid_book_items
+
+
+def reserve(request):
+    home_url_list = request.build_absolute_uri().split("/")[:-2]
+    home_url = "/".join(home_url_list)
+    books = get_valid_reserves()
+    print(books)
+    return render(
+        request,
+        'member/reserve.html',
+        {
+        "books":books ,
+        "home_url": home_url
+        })
+
+def reserve_request(request, book):
+    book_instance = get_object_or_404(Book, pk=book)
+    today = datetime.date.today()
+    member = Member.objects.filter(user=request.user).first()
+    reserve = Book_Reserve(
+        borrower= member,
+        book= book_instance,
+        reserve_date = today,
+        reserve_status =False
+        )
+    reserve.save()
+    return render(request, 'member/reserve-request.html', {'book': book_instance})
+
+def get_valid_reserves():
+        valid_books= []
+        book_codes= set()
+        book_items = Book_Item.objects.all().prefetch_related("book")
+        for book_item in book_items:
+            if (not book_item.loan_status) and book_item.book.ISBN_code not in book_codes:
+                book_codes.add(book_item.book.ISBN_code)
+                valid_books.append(book_item.book)
+        return valid_books

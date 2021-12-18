@@ -10,4 +10,7 @@ urlpatterns = [
     path("register-new-member/", views.register_new_member, name= "register-new-member"),
     path("borrow/", views.borrow, name= "borrow"),
     path("<str:book_item>/borrowed-successful/", views.borrowed_successful, name= "borrowed-successful"),
+    path("reserve/", views.reserve, name= "reserve"),
+    path("<str:book>/reserve-request/", views.reserve_request, name= "reserve-request"),
+
 ]
