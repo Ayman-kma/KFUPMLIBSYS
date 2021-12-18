@@ -33,6 +33,10 @@ class Library_People(models.Model):
     def Last_Name(self):
         return self.user.last_name
 
+    @property
+    def date_joined(self):
+        return self.user.date_joined
+    
     Birth_Date = models.DateField(
         blank=True,
         null=True,

@@ -6,15 +6,26 @@ from .models import *
 # from .forms import borrowBookForm
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.contrib.auth.models import User
 
+import pytz
 
 from .filters import BookFilter
 from django.views.generic import ListView
 
 
 def index(request):
+    utc=pytz.UTC
+    query1= Member.objects.all()
+    today_one_year_ago = datetime.datetime.today() - datetime.timedelta(days = 365)
+    print("mewo")
+    print(today_one_year_ago)
+    q2 = [x.date_joined> utc.localize(today_one_year_ago) for x in query1]
+
     context = {
-        'books': Book.objects.all()
+        'books': Book.objects.all(),
+        "query1": q2,
+
     }
     return render(request, 'core/index.html', context)
 
