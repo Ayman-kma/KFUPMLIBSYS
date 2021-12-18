@@ -2,7 +2,7 @@ asgiref==3.4.1
 backports.entry-points-selectable==1.1.1
 backports.zoneinfo==0.2.1
 distlib==0.3.4
-Django==4.0
+Django==3.2.10
 django-crispy-forms==1.13.0
 django-filter==21.1
 django-phonenumber-field==6.0.0

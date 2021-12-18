@@ -15,20 +15,21 @@ from django.views.generic import ListView
 
 
 def index(request):
-    utc=pytz.UTC
-    query1= Member.objects.all()
-    today_one_year_ago = datetime.datetime.today() - datetime.timedelta(days = 365)
-    print("mewo")
-    print(today_one_year_ago)
-    q2 = [x.date_joined> utc.localize(today_one_year_ago) for x in query1]
-
     context = {
         'books': Book.objects.all(),
-        "query1": q2,
-
     }
     return render(request, 'core/index.html', context)
 
+def report_get_new_members(request):
+    utc=pytz.UTC
+    query1= Member.objects.all()
+    today_one_year_ago = datetime.datetime.today() - datetime.timedelta(days = 365)
+    valid_members = [x for x in query1 if x.date_joined> utc.localize(today_one_year_ago)]
+    context = {
+        'books': Book.objects.all(),
+        "members": valid_members,
+    }
+    return render(request, 'reports/new-members.html', context)
 
 def register_new_member(request):
     context = {}
