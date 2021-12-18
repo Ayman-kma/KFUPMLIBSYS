@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 import datetime
 from django.http.response import HttpResponse
 from .models import *
-from .forms import borrowBookForm
+# from .forms import borrowBookForm
 from django.urls import reverse
 from django.utils.http import urlencode
 
@@ -27,28 +27,12 @@ def register_new_member(request):
 def borrow(request):
  # if this is a POST request we need to process the form data
     valid_book_items = get_valid_book_items()
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = borrowBookForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            redirect_url = reverse(
-                'core:borrowed-successful', args=(form.cleaned_data["book_item"].bar_code,))
-            return redirect(f'{redirect_url}')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = borrowBookForm()
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
     return render(
         request,
         'member/borrow.html',
-        {'form': form,
-         "valid_book_items": valid_book_items,
+        {"valid_book_items": valid_book_items,
          "home_url": home_url})
 
 

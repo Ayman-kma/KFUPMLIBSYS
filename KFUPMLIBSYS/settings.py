@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+LOGIN_REDIRECT_URL = 'core:home-index'
 # Application definition
 
 INSTALLED_APPS = [
