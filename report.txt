@@ -3,3 +3,4 @@ Assumptions:
 2- only the superuser can create accounts for librarians via the admin page.
 3- Both superuser and librarians create accouts for members.
 4- When a member is requesting to borrow a book, the person who hands out the book to the member is stored in the "issued_by" field.
+5- A member cannot return books with the website only, he must go to the library to return book_items

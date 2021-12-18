@@ -67,7 +67,6 @@ def reserve(request):
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
     books = get_valid_reserves()
-    print(books)
     return render(
         request,
         'member/reserve.html',
@@ -105,17 +104,20 @@ def get_valid_reserves():
 
     return valid_books
 
+def get_valid_returns(request):
+    member = Member.objects.filter(user=request.user).first()
+    loans = Book_Loan.objects.filter(borrower=member).prefetch_related("book_item")
+    return loans
 
 def return_book(request):
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
-    books = get_valid_reserves()
-    print(books)
+    loans = get_valid_returns(request)
     return render(
         request,
-        'member/reserve.html',
+        'member/return.html',
         {
-            "books": books,
+            "loans": loans,
             "home_url": home_url
         })
 
