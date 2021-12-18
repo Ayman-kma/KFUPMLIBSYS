@@ -114,3 +114,16 @@ def get_valid_reserves():
                 valid_books.append(book)
                 
         return valid_books
+
+def return_book(request):
+    home_url_list = request.build_absolute_uri().split("/")[:-2]
+    home_url = "/".join(home_url_list)
+    books = get_valid_reserves()
+    print(books)
+    return render(
+        request,
+        'member/reserve.html',
+        {
+        "books":books ,
+        "home_url": home_url
+        })

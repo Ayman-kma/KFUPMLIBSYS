@@ -12,5 +12,6 @@ urlpatterns = [
     path("<str:book_item>/borrowed-successful/", views.borrowed_successful, name= "borrowed-successful"),
     path("reserve/", views.reserve, name= "reserve"),
     path("<str:book>/reserve-request/", views.reserve_request, name= "reserve-request"),
+    path("return-book/", views.return_book, name= "return-book"),
 
 ]
