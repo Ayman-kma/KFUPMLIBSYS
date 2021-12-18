@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 import datetime
 from django.http.response import HttpResponse
@@ -7,6 +7,9 @@ from .forms import borrowBookForm
 from django.urls import reverse
 from django.utils.http import urlencode
 
+
+from .filters import BookFilter
+from django.views.generic import ListView
 
 
 def index(request):
@@ -32,7 +35,8 @@ def borrow(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            redirect_url = reverse('core:borrowed-successful', args=(form.cleaned_data["book_item"].bar_code,))
+            redirect_url = reverse(
+                'core:borrowed-successful', args=(form.cleaned_data["book_item"].bar_code,))
             return redirect(f'{redirect_url}')
 
     # if a GET (or any other method) we'll create a blank form
@@ -44,8 +48,8 @@ def borrow(request):
         request,
         'member/borrow.html',
         {'form': form,
-        "valid_book_items": valid_book_items,
-        "home_url": home_url})
+         "valid_book_items": valid_book_items,
+         "home_url": home_url})
 
 
 def borrowed_successful(request, book_item):
@@ -53,26 +57,26 @@ def borrowed_successful(request, book_item):
     today = datetime.date.today()
     member = Member.objects.filter(user=request.user).first()
     loan = Book_Loan(
-        borrower= member,
-        book_item= book_item_instance,
-        borrowed_from = today,
-        borrowed_to =today + datetime.timedelta(days= 90),
-        )
+        borrower=member,
+        book_item=book_item_instance,
+        borrowed_from=today,
+        borrowed_to=today + datetime.timedelta(days=90),
+    )
     loan.save()
     return render(request, 'member/borrowed-successful.html', {'book_item': book_item_instance, "loan": loan})
 
 
 def get_valid_book_items():
-        valid_book_items= []
-        book_codes= set()
-        book_items = Book_Item.objects.all().prefetch_related("book")
-        for book_item in book_items:
-            # key-Display value pairs
-            # Remove duplicate books with many book items and only display the first one.
-            if book_item.loan_status and book_item.book.ISBN_code not in book_codes:
-                book_codes.add(book_item.book.ISBN_code)
-                valid_book_items.append(book_item)
-        return valid_book_items
+    valid_book_items = []
+    book_codes = set()
+    book_items = Book_Item.objects.all().prefetch_related("book")
+    for book_item in book_items:
+        # key-Display value pairs
+        # Remove duplicate books with many book items and only display the first one.
+        if book_item.loan_status and book_item.book.ISBN_code not in book_codes:
+            book_codes.add(book_item.book.ISBN_code)
+            valid_book_items.append(book_item)
+    return valid_book_items
 
 
 def reserve(request):
@@ -84,36 +88,39 @@ def reserve(request):
         request,
         'member/reserve.html',
         {
-        "books":books ,
-        "home_url": home_url
+            "books": books,
+            "home_url": home_url
         })
+
 
 def reserve_request(request, book):
     book_instance = get_object_or_404(Book, pk=book)
     today = datetime.date.today()
     member = Member.objects.filter(user=request.user).first()
     reserve = Book_Reserve(
-        borrower= member,
-        book= book_instance,
-        reserve_date = today,
-        reserve_status =False
-        )
+        borrower=member,
+        book=book_instance,
+        reserve_date=today,
+        reserve_status=False
+    )
     reserve.save()
     return render(request, 'member/reserve-request.html', {'book': book_instance})
 
+
 def get_valid_reserves():
-        valid_books= []
-        books = Book.objects.all()
-        for book in books:
-            book_items = Book_Item.objects.filter(book=book)
-            book_is_available = False
-            for item in book_items:
-                if (item.loan_status):
-                    book_is_available = True
-            if not book_is_available:
-                valid_books.append(book)
-                
-        return valid_books
+    valid_books = []
+    books = Book.objects.all()
+    for book in books:
+        book_items = Book_Item.objects.filter(book=book)
+        book_is_available = False
+        for item in book_items:
+            if (item.loan_status):
+                book_is_available = True
+        if not book_is_available:
+            valid_books.append(book)
+
+    return valid_books
+
 
 def return_book(request):
     home_url_list = request.build_absolute_uri().split("/")[:-2]
@@ -124,6 +131,11 @@ def return_book(request):
         request,
         'member/reserve.html',
         {
-        "books":books ,
-        "home_url": home_url
+            "books": books,
+            "home_url": home_url
         })
+
+
+def book_list(request):
+    f = BookFilter(request.GET, queryset=Book.objects.all())
+    return render(request, 'core/search-form.html', {'filter': f})

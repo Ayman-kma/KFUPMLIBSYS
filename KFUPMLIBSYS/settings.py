@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'users',
     'phonenumber_field',
+    'django_filters',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
