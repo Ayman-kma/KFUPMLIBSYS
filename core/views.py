@@ -59,7 +59,7 @@ def borrowed_successful(request, book_item):
         borrowed_to =today + datetime.timedelta(days= 90),
         )
     loan.save()
-    return render(request, 'member/borrowed-successful.html', {'book_item': book_item_instance})
+    return render(request, 'member/borrowed-successful.html', {'book_item': book_item_instance, "loan": loan})
 
 
 def get_valid_book_items():
@@ -103,10 +103,14 @@ def reserve_request(request, book):
 
 def get_valid_reserves():
         valid_books= []
-        book_codes= set()
-        book_items = Book_Item.objects.all().prefetch_related("book")
-        for book_item in book_items:
-            if (not book_item.loan_status) and book_item.book.ISBN_code not in book_codes:
-                book_codes.add(book_item.book.ISBN_code)
-                valid_books.append(book_item.book)
+        books = Book.objects.all()
+        for book in books:
+            book_items = Book_Item.objects.filter(book=book)
+            book_is_available = False
+            for item in book_items:
+                if (item.loan_status):
+                    book_is_available = True
+            if not book_is_available:
+                valid_books.append(book)
+                
         return valid_books

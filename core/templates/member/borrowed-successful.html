@@ -6,7 +6,11 @@
 
 {% if user.is_authenticated and user|belongs_to_member %}
 <h1>You have borrowed the book {{book_item.book.book_title}} as {{user.first_name}}</h1>
-
+<br>
+<br>
+<h2>Your borrow is valid untill: {{loan.borrowed_to}}</h1>
+<h2>Please make sure to return the book before the due date to avoid any panlties</h1>
+<br>
 <h3> Please pass by the library to pick up and issue your book </h3>
 
 
