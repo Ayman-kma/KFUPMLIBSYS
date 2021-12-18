@@ -13,13 +13,15 @@
 <br>
 {% if loans %}
 {% for loan in loans%}
+
 <h1>
     Book Title: {{loan.book_item.book.book_title}}, barcode: {{loan.book_item.bar_code}}
 </h1>
 <h3>
     Borrow date: {{loan.borrowed_from}}, Due Date: {{loan.borrowed_to}}
 </h3>
-
+<h1><a href="{{home_url}}/{{loan.id}}/renew-successful">Renew This Book</a>
+<br>
 <br>
 {%endfor%}
 
