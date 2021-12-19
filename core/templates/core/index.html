@@ -42,12 +42,12 @@
 
 {% else %}
 {% comment %} If the user is not loggeed in {% endcomment %}
-
+{% if books%}
     {% for book in books %}
     <article class="media content-section">
         <div class="media-body">
           <h2>Book Title: {{ book.book_title }}</h2>
-          <small class="text-muted">edition: {{ book.publication_year }}</small>
+          <small class="text-muted">Edition: {{ book.publication_year }}</small>
           
           <p class="article-content">Subject: {{ book.subject }}</p>
           
@@ -55,6 +55,14 @@
         </div>
     </article>
     {% endfor %}
+{%else%}
+<h1> There are no books currently, please visit the website later :) </h1>
 
+
+
+{% endif %}
+<br>
+<br>
+<h3>If you are a member or a librarian please <a href="{% url 'login' %}">Click Here to Login</a> to view other functionalities</h3>
 {% endif %}
 {% endblock content %}
