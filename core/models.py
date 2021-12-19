@@ -8,6 +8,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 User._meta.get_field('email').blank = False
+from django.core.mail import send_mail
 # Create your models here.
 
 
@@ -208,6 +209,9 @@ class Book(models.Model):
 
 
 class Book_Item(models.Model):
+    def save(self, *args, **kwargs):
+        related_reserves = Book_reserve.objects.filter(book_item_book=self.)
+
     bar_code = models.CharField(
         max_length=32,
         unique=True,
