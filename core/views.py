@@ -80,10 +80,18 @@ def register_new_member(request):
 
 
 def borrow(request):
- # if this is a POST request we need to process the form data
-    valid_book_items = get_valid_book_items()
+    current_member = Member.objects.filter(user=request.user).first()
+    user_loans = Book_Loan.objects.filter(borrower= current_member)
+    current_loans = [x for x in user_loans if not x.actual_return_date]
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
+    if len(current_loans) >= 5:
+        return render(request, 'member/return.html',{
+            "limit": True,
+            "loans": current_loans,
+            "home_url": home_url
+        })
+    valid_book_items = get_valid_book_items()
     return render(
         request,
         'member/borrow.html',
@@ -99,7 +107,7 @@ def borrowed_successful(request, book_item):
         borrower=member,
         book_item=book_item_instance,
         borrowed_from=today,
-        borrowed_to=today + datetime.timedelta(days=90),
+        borrowed_to=today + datetime.timedelta(days=30),
     )
     loan.save()
     return render(request, 'member/borrowed-successful.html', {'book_item': book_item_instance, "loan": loan})
@@ -172,6 +180,7 @@ def return_book(request):
         request,
         'member/return.html',
         {
+            "limit": False,
             "loans": loans,
             "home_url": home_url
         })
@@ -196,9 +205,16 @@ def renew_book(request):
 def renew_successful(request, loan):
     loan_instance = get_object_or_404(Book_Loan, pk=loan)
     today = datetime.date.today()
-    loan_instance.borrowed_to = today + datetime.timedelta(days=90)
+    limit_date = loan_instance.borrowed_from + datetime.timedelta(days=90)
+    extensin_date = today + datetime.timedelta(days=30)
+    limit = False
+    if extensin_date < limit_date:
+        loan_instance.borrowed_to = extensin_date
+    else:
+        loan_instance.borrowed_to = limit_date
+        limit = True
     loan_instance.save()
-    return render(request, 'member/renew-successful.html', {'loan': loan_instance})
+    return render(request, 'member/renew-successful.html', {'loan': loan_instance, "limit": limit})
 
 
 def reports_index(request):
