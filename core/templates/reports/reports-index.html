@@ -6,15 +6,36 @@
 
 {% if user.is_authenticated and user|belongs_to_librarian %}
 {% comment %} If the user is a librarian {% endcomment %}
-<h1><a href="{% url 'core:new-members' %}">List New members who were added this year but did not check out any book</a></h1>
-<br>
-<h1><a href="{% url 'core:all-members' %}">List all members and their penalty amounts.</a></h1>
-<br>
-<h1><a href="{% url 'core:bad-members' %}">List members who more than 3 books and who have exceeded 120 days for at least one book</a></h1>
-<br>
-<h1><a href="{% url 'core:before-due' %}">List members who check out books but return them at least one day before due date</a></h1>
-<br>
-
+<h1>Generate Reports</h1>
+<br/>
+<div class="card mb-4" style="">
+  <div class="card-body">
+    <h4 class="card-title"><a href="{% url 'core:new-members' %}">New members Report</a></h4>
+    <p class="card-text">List New members who were added this year but did not check out any book.</p>
+    <a href="{% url 'core:new-members' %}" class="btn btn-primary">Go</a>
+  </div>
+</div>
+<div class="card mb-4" style="">
+    <div class="card-body">
+      <h4 class="card-title"><a href="{% url 'core:all-members' %}">Penalty Report</a></h4>
+      <p class="card-text">List all members and their penalty amounts.</p>
+      <a href="{% url 'core:all-members' %}" class="btn btn-primary">Go</a>
+    </div>
+  </div>
+  <div class="card mb-4" style="">
+    <div class="card-body">
+      <h4 class="card-title"><a href="{% url 'core:bad-members' %}">Many Books Report</a></h4>
+      <p class="card-text">List members who checked out more than 3 books and have exceeded 120 days for at least one book.</p>
+      <a href="{% url 'core:bad-members' %}" class="btn btn-primary">Go</a>
+    </div>
+  </div>
+  <div class="card mb-4" style="">
+    <div class="card-body">
+      <h4 class="card-title"><a href="{% url 'core:before-due' %}">Before Due Report</a></h4>
+      <p class="card-text">List members who check out books but return them at least one day before due date.</p>
+      <a href="{% url 'core:before-due' %}" class="btn btn-primary">Go</a>
+    </div>
+  </div>
 {% else %}
 {% comment %} If the user is not loggeed in {% endcomment %}
 <h1>You Are not Allowed to View this page</h1>

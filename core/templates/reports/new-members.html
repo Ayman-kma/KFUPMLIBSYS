@@ -10,12 +10,9 @@
 {% for member in members %}
 <article class="media content-section">
   <div class="media-body">
-    <p>
-
-        {{ member.user.first_name }}, ID = {{member.People_ID}}
-        <br>
-        Date_Joined: {{member.user.date_joined}}
-    </p>
+    <h2>Name: <p style="display: inline;" class="small">{{ member.user.last_name }}, {{ member.user.first_name }}</p></h2>
+    <small class="text-muted">Date_Joined: {{member.user.date_joined}}</small>
+    <p class="article-content">ID = {{member.People_ID}}</p>
   </div>
 </article>
 {% endfor %}

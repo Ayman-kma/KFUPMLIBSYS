@@ -2,8 +2,8 @@
 {% load crispy_forms_tags %}
 
 {% block title %}Search Catalog{% endblock title %}
-
 {% block content %}
+<h1>Search Books</h1>
     <form method="get">
         {{ filter.form|crispy }}
         <input class="btn btn-outline-info" type="submit" value="Search"/>

@@ -6,9 +6,30 @@
 
 {% if user.is_authenticated and user|belongs_to_librarian %}
 {% comment %} If the user is a librarian {% endcomment %}
-<h1><a href="{% url 'core:reports-index' %}">View Reports</a></h1>
-<h1><a href="{% url 'core:request-book' %}">Request Books</a></h1>
-<h1><a href="/admin">Access Admin Page</a></h1>
+<h1>Welcome, Librarian!</h1>
+<br/>
+<div class="card mb-4" style="">
+  <div class="card-body">
+    <h4 class="card-title"><a href="{% url 'core:reports-index' %}">View Reports</a></h4>
+    <p class="card-text">Gnerate and view various reports about library memebers.</p>
+    <a href="{% url 'core:reports-index' %}" class="btn btn-primary">Go</a>
+  </div>
+</div>
+<div class="card mb-4" style="">
+  <div class="card-body">
+    <h4 class="card-title"><a href="{% url 'core:request-book' %}">Request Books</a></h4>
+    <p class="card-text">Request books that are not currently available in the library.</p>
+    <a href="{% url 'core:request-book' %}" class="btn btn-primary">Go</a>
+  </div>
+</div>
+
+<div class="card mb-4" style="">
+  <div class="card-body">
+    <h4 class="card-title"><a href="/admin">Admin Page</a></h4>
+    <p class="card-text">View admin page where you can add/remove/edit books and members.</p>
+    <a href="/admin" class="btn btn-primary">Go</a>
+  </div>
+</div>
 
 
 {% elif user.is_authenticated and user|belongs_to_member %}
@@ -24,7 +45,6 @@
 
     {% for book in books %}
     <article class="media content-section">
-      <div class="media-body">
         <div class="media-body">
           <h2>Book Title: {{ book.book_title }}</h2>
           <small class="text-muted">edition: {{ book.publication_year }}</small>

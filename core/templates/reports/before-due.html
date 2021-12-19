@@ -8,13 +8,13 @@
 <h2>Members who returned books before due date</h2>
 {% if dictionaries %}
 {% for dictionary in dictionaries %}
+
 <article class="media content-section">
   <div class="media-body">
-    <p>
-
-        {{ dictionary.member.user.first_name }}
-    </p>
-  </div>
+    <h2>Name: <p style="display: inline;" class="small">{{ dictionary.member.user.last_name }}, {{ dictionary.member.user.first_name }}</p></h2>
+    <small class="text-muted">Date_Joined: {{dictionary.member.user.date_joined}}</small>
+    <p class="article-content">ID = {{dictionary.member.People_ID}}</p>
+  </div
 </article>
 {% endfor %}
 {% else %}
