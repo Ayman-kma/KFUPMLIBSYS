@@ -201,6 +201,7 @@ def renew_book(request):
             "loans": loans,
             "home_url": home_url
         })
+        
 
 def renew_successful(request, loan):
     loan_instance = get_object_or_404(Book_Loan, pk=loan)
