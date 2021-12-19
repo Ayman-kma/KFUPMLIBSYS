@@ -129,3 +129,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+DEFAULT_FROM_EMAIL = 'kfupmlibsys@yahoo.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.yahoo.com'
+EMAIL_HOST_USER = 'kfupmlibsys@yahoo.com'
+EMAIL_HOST_PASSWORD = 'kfupmlibsys1111'
+EMAIL_PORT = 587
