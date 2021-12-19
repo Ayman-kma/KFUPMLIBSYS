@@ -9,8 +9,13 @@
 <br>
 <br>
 <br>
+{% if limit %}
+<h2> You cannot Borrow more books because you have reached the limit. </h2>
+<h3> The books you have currently are: </h3>
+{% else %}
 <h2> You have the following books with you: </h2>
 <br>
+{%endif%}
 {% if loans %}
 {% for loan in loans%}
 <h1>

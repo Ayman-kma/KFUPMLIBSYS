@@ -80,10 +80,18 @@ def register_new_member(request):
 
 
 def borrow(request):
- # if this is a POST request we need to process the form data
-    valid_book_items = get_valid_book_items()
+    current_member = Member.objects.filter(user=request.user).first()
+    user_loans = Book_Loan.objects.filter(borrower= current_member)
+    current_loans = [x for x in user_loans if not x.actual_return_date]
     home_url_list = request.build_absolute_uri().split("/")[:-2]
     home_url = "/".join(home_url_list)
+    if len(current_loans) >= 5:
+        return render(request, 'member/return.html',{
+            "limit": True,
+            "loans": current_loans,
+            "home_url": home_url
+        })
+    valid_book_items = get_valid_book_items()
     return render(
         request,
         'member/borrow.html',
@@ -172,6 +180,7 @@ def return_book(request):
         request,
         'member/return.html',
         {
+            "limit": False,
             "loans": loans,
             "home_url": home_url
         })
