@@ -31,6 +31,13 @@ def report_get_new_members(request):
     }
     return render(request, 'reports/new-members.html', context)
 
+def report_get_all_members(request):
+    all_members = Member.objects.all().prefetch_related('user')
+    context = {
+        "members": all_members,
+    }
+    return render(request, 'reports/all-members.html', context)
+
 def register_new_member(request):
     context = {}
     return render(request, 'core/register-new-member.html', context)
