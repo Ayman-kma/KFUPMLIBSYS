@@ -43,7 +43,6 @@ def report_get_all_members(request):
                 days = datetime.date.today()-loan.borrowed_to
                 days = days.days
                 penalty += days*5
-                print(days)
         dictionary.append({
             'member': member,
             'loans': current_loans,
@@ -69,7 +68,6 @@ def report_return_before_due(request):
             dictionaries.append({
                 'member': member,
             })    
-    print(dictionaries)
     context = {
         'dictionaries': dictionaries,
     }
@@ -197,11 +195,9 @@ def renew_book(request):
 
 def renew_successful(request, loan):
     loan_instance = get_object_or_404(Book_Loan, pk=loan)
-    print(loan_instance.borrowed_to)
     today = datetime.date.today()
     loan_instance.borrowed_to = today + datetime.timedelta(days=90)
     loan_instance.save()
-    print(loan_instance.borrowed_to)
     return render(request, 'member/renew-successful.html', {'loan': loan_instance})
 
 

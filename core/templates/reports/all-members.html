@@ -5,6 +5,8 @@
 
 
 {% if user.is_authenticated and user|belongs_to_librarian %}
+<h2>All Members</h2>
+{%if dictionary%}
 {% for member in dictionary %}
 <article class="media content-section">
   <div class="media-body">
@@ -20,6 +22,10 @@
   </div>
 </article>
 {% endfor %}
+
+{% else %}
+<h3>There are no users matching your criteria</h3>
+{%endif%}
 
 {% else %}
 <h1>You Are not Allowed to View this page</h1>
