@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load user_types %}
+
+{% block content%} 
+
+
+{% if user.is_authenticated and user|belongs_to_librarian %}
+{% comment %} If the user is a librarian {% endcomment %}
+<h1><a href="{% url 'core:new-members' %}">List New members who were added this year but did not check out any book</a></h1>
+<br>
+<h1><a href="">List all members and their penalty amounts.</a></h1>
+<br>
+<h1><a href="">List members who more than 3 books and who have exceeded 120 days for at least one book</a></h1>
+<br>
+<h1><a href="">List members who check out books but return them at least one day before due date</a></h1>
+<br>
+
+{% else %}
+{% comment %} If the user is not loggeed in {% endcomment %}
+<h1>You Are not Allowed to View this page</h1>
+<br>
+<h1><a href="{% url 'core:home-index' %}">Go to HomePage From here</a></h1>
+
+{% endif %}
+{% endblock content %}
