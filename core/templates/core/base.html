@@ -13,8 +13,16 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="shortcut icon" type="image/png" href="{% static 'core/favicon.png' %}" />
-
     <link rel="stylesheet" type="text/css" href="{% static 'core/main.css' %}">
+
+
+    <meta property="og:title" content="KFUPMLIBSYS">
+    <meta property="og:type" content="Website" />
+    <meta property="og:description" content="A Library system for KFUPM students.">
+    <meta property="og:image" content="{% static 'core/favicon.png' %}">
+    <meta name="twitter:card" content="summary_large_image">
+
+
     {% if title %}
     <title>KFUPMLIBSYS - {{ title }}</title>
     {% else %}
