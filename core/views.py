@@ -158,3 +158,7 @@ def renew_successful(request, loan):
     loan_instance.save()
     print(loan_instance.borrowed_to)
     return render(request, 'member/renew-successful.html', {'loan': loan_instance})
+
+
+def reports_index(request):
+    return render(request, 'reports/reports-index.html')
