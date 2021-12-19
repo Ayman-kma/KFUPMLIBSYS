@@ -220,6 +220,9 @@ def renew_successful(request, loan):
 def reports_index(request):
     return render(request, 'reports/reports-index.html')
 
+def request_book(request):
+    return render(request, 'core/request-book.html')
+
 def bad_members(request):
     all_members = Member.objects.all().prefetch_related('user')
     dictionary = []
