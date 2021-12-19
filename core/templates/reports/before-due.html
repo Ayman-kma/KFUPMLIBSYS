@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% load user_types %}
+
+{% block content%} 
+
+
+{% if user.is_authenticated and user|belongs_to_librarian %}
+<h2>Users who returned books before due date</h2>
+{% for dictionary in dictionaries %}
+<article class="media content-section">
+  <div class="media-body">
+    <p>
+
+        {{ dictionary.member.user.first_name }}
+    </p>
+  </div>
+</article>
+{% endfor %}
+
+{% else %}
+<h1>You Are not Allowed to View this page</h1>
+<br>
+<h1><a href="{% url 'core:home-index' %}">Go to HomePage From here</a></h1>
+
+{% endif %}
+{% endblock content %}

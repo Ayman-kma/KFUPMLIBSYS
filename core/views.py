@@ -36,8 +36,9 @@ def report_get_all_members(request):
     dictionary = []
     for member in all_members:
         loans = Book_Loan.objects.filter(borrower=member)
+        current_loans = [x for x in loans if not x.actual_return_date]
         penalty = 0
-        for loan in loans:
+        for loan in current_loans:
             if(loan.borrowed_to<datetime.date.today()):
                 days = datetime.date.today()-loan.borrowed_to
                 days = days.days
@@ -45,7 +46,7 @@ def report_get_all_members(request):
                 print(days)
         dictionary.append({
             'member': member,
-            'loans': Book_Loan.objects.filter(borrower=member),
+            'loans': current_loans,
             'penalty': penalty
         })  
     context = {
@@ -53,6 +54,27 @@ def report_get_all_members(request):
 
     }
     return render(request, 'reports/all-members.html', context)
+
+def report_return_before_due(request):
+    all_members = Member.objects.all().prefetch_related('user')
+    dictionaries = []
+    for member in all_members: 
+        boolean=False
+        Loans = Book_Loan.objects.filter(borrower=member)
+        for x in Loans:
+           if(x.actual_return_date):
+            if(x.borrowed_to>x.actual_return_date):
+                boolean = True
+        if(boolean):
+            dictionaries.append({
+                'member': member,
+            })    
+    print(dictionaries)
+    context = {
+        'dictionaries': dictionaries,
+    }
+    return render(request, 'reports/before-due.html', context)
+
 
 def register_new_member(request):
     context = {}
