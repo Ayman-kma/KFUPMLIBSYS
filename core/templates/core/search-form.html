@@ -4,24 +4,28 @@
 {% block title %}Search Catalog{% endblock title %}
 {% block content %}
 <h1>Search Books</h1>
-    <form method="get">
-        {{ filter.form|crispy }}
-        <input class="btn btn-outline-info" type="submit" value="Search"/>
-    </form>
-    {% for book in filter.qs %}
-    <article class="media content-section">
-        <a class="article-title" href="#">
-        <div class="media-body">
-          <h2>Book Title: {{ book.book_title }}</h2>
-          <small class="text-muted">edition: {{ book.publication_year }}</small>
-          <p class="article-content">Authors: {{ book.authors.first.user.first_name }}</p>
-          <p class="article-content">Subject: {{ book.subject }}</p>
-          <small class="text-muted">Availability:  {% if book.is_available %} <span style="color: green">{{ 'Available' }} </span>{% else %}<span style="color: red">{{ 'Not Available' }} </span> {%endif%}</small>
-          <br>
-          <small class="text-muted">#No of Copeis:  {{ book.no_of_copies }}</small>
-        
-        </div>
+<form method="get">
+  {{ filter.form|crispy }}
+  <input onclick="removeHide()" class="btn btn-outline-info" type="submit" value="Search" />
+</form>
+<div id="divvy" class="hidden">
+  <h1>Books:</h1>
+  {% for book in filter.qs %}
+  <article class="media content-section">
+    <a class="article-title" href="#">
+      <div class="media-body">
+        <h2>Book Title: {{ book.book_title }}</h2>
+        <small class="text-muted">edition: {{ book.publication_year }}</small>
+        <p class="article-content">Authors: {{ book.authors.first.user.first_name }}</p>
+        <p class="article-content">Subject: {{ book.subject }}</p>
+        <small class="text-muted">Availability: {% if book.is_available %} <span style="color: green">{{ 'Available' }}
+          </span>{% else %}<span style="color: red">{{ 'Not Available' }} </span> {%endif%}</small>
+        <br>
+        <small class="text-muted">#No of Copeis: {{ book.no_of_copies }}</small>
+      </div>
     </a>
-      </article>
-    {% endfor %}
+  </article>
+  {% endfor %}
+</div>
+
 {% endblock %}

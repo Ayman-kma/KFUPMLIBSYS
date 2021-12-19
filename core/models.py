@@ -6,7 +6,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
-
+from django.contrib.auth.models import User
+User._meta.get_field('email').blank = False
 # Create your models here.
 
 
