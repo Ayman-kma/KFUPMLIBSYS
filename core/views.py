@@ -33,8 +33,24 @@ def report_get_new_members(request):
 
 def report_get_all_members(request):
     all_members = Member.objects.all().prefetch_related('user')
+    dictionary = []
+    for member in all_members:
+        loans = Book_Loan.objects.filter(borrower=member)
+        penalty = 0
+        for loan in loans:
+            if(loan.borrowed_to<datetime.date.today()):
+                days = datetime.date.today()-loan.borrowed_to
+                days = days.days
+                penalty += days*5
+                print(days)
+        dictionary.append({
+            'member': member,
+            'loans': Book_Loan.objects.filter(borrower=member),
+            'penalty': penalty
+        })  
     context = {
-        "members": all_members,
+        'dictionary': dictionary,
+
     }
     return render(request, 'reports/all-members.html', context)
 

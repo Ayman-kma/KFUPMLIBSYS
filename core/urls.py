@@ -21,5 +21,4 @@ urlpatterns = [
     path("new-members/", views.report_get_new_members, name="new-members"),
     path("all-members/", views.report_get_all_members, name="all-members"),
     path("reports-index", views.reports_index, name= "reports-index"), 
-
 ]

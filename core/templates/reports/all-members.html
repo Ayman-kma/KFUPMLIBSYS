@@ -5,11 +5,15 @@
 
 
 {% if user.is_authenticated and user|belongs_to_librarian %}
-{% for member in members %}
+{% for member in dictionary %}
 <article class="media content-section">
   <div class="media-body">
-    <h2><a class="article-title" href="#">{{ member.user.first_name }}</a></h2>
-    <p class="article-content">{{ member.user.last_name }}</p>
+    <h2><a class="article-title" href="#">{{ member.member.user.first_name }}</a></h2>
+    <p class="article-content">Penalty= {{ member.penalty }} Riyals</p>
+    <p class="article-content">Borrowed Books:<br> {% for loan in member.loans %}
+        {{ loan.book_item.book.book_title}}
+        {% endfor %}
+    </p>
   </div>
 </article>
 {% endfor %}
