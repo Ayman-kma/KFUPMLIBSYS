@@ -17,3 +17,6 @@ sqlparse==0.4.2
 toml==0.10.2
 tzdata==2021.5
 virtualenv==20.10.0
+django-dotenv==1.4.2
+gunicorn
+django-heroku
