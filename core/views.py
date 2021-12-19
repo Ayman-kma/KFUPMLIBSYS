@@ -207,3 +207,31 @@ def renew_successful(request, loan):
 
 def reports_index(request):
     return render(request, 'reports/reports-index.html')
+
+def bad_members(request):
+    all_members = Member.objects.all().prefetch_related('user')
+    dictionary = []
+    for member in all_members:
+        loans = Book_Loan.objects.filter(borrower=member)
+        today = datetime.date.today()
+        current_loans = [x for x in loans if not x.actual_return_date]
+        passed_120 = False
+        penalty = 0
+        for loan in current_loans:
+            if(loan.borrowed_to<today):
+                days = today-loan.borrowed_to
+                days = days.days
+                penalty += days*5
+                if days > 120:
+                    passed_120 = True
+        if (len(loans) > 3 and passed_120):
+            dictionary.append({
+                'member': member,
+                'loans': Book_Loan.objects.filter(borrower=member),
+                'penalty': penalty
+            })  
+    context = {
+        'dictionary': dictionary,
+
+    }
+    return render(request, 'reports/bad-members.html', context)

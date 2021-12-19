@@ -22,4 +22,6 @@ urlpatterns = [
     path("all-members/", views.report_get_all_members, name="all-members"),
     path("reports-index", views.reports_index, name= "reports-index"), 
     path("before-due/", views.report_return_before_due, name= "before-due"), 
+    path("bad-members", views.bad_members, name= "bad-members"), 
+
 ]
