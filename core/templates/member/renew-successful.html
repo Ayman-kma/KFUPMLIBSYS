@@ -5,12 +5,22 @@
 
 
 {% if user.is_authenticated and user|belongs_to_member %}
+{% if limit%}
+<h1>You have reached the limit of 90 days to renew this book</h1>
+<h1>The Renwation was made based on this limit</h1>
+<br>
+<br>
+<h2>Your borrow is now valid untill: {{loan.borrowed_to}} which is the limit.</h2>
+<h3>If you try to renew the book again nothing will happen. The limit is fixed!</h3>
+<h2>Please make sure to return the book before the due date to avoid any panlties</h2>
+
+{%else%}
 <h1>You have Renewd the book {{loan.book_item.book.book_title}} as {{user.first_name}}</h1>
 <br>
 <br>
-<h2>Your borrow is now valid untill: {{loan.borrowed_to}}</h1>
-<h2>Please make sure to return the book before the due date to avoid any panlties</h1>
-
+<h2>Your borrow is now valid untill: {{loan.borrowed_to}}</h2>
+<h2>Please make sure to return the book before the due date to avoid any panlties</h2>
+{%endif%}
 
 
 {% else %}

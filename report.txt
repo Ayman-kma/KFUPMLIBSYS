@@ -8,7 +8,6 @@ Assumptions:
 
 
 To Fix:
-2- Limit of maximum 5 books.
 3- Limit of 90 days.
 4- Notification when a book is avaialbe after reservation.
 5- Requesting a book from a different library.

@@ -107,7 +107,7 @@ def borrowed_successful(request, book_item):
         borrower=member,
         book_item=book_item_instance,
         borrowed_from=today,
-        borrowed_to=today + datetime.timedelta(days=90),
+        borrowed_to=today + datetime.timedelta(days=30),
     )
     loan.save()
     return render(request, 'member/borrowed-successful.html', {'book_item': book_item_instance, "loan": loan})
@@ -205,9 +205,16 @@ def renew_book(request):
 def renew_successful(request, loan):
     loan_instance = get_object_or_404(Book_Loan, pk=loan)
     today = datetime.date.today()
-    loan_instance.borrowed_to = today + datetime.timedelta(days=90)
+    limit_date = loan_instance.borrowed_from + datetime.timedelta(days=90)
+    extensin_date = today + datetime.timedelta(days=30)
+    limit = False
+    if extensin_date < limit_date:
+        loan_instance.borrowed_to = extensin_date
+    else:
+        loan_instance.borrowed_to = limit_date
+        limit = True
     loan_instance.save()
-    return render(request, 'member/renew-successful.html', {'loan': loan_instance})
+    return render(request, 'member/renew-successful.html', {'loan': loan_instance, "limit": limit})
 
 
 def reports_index(request):
