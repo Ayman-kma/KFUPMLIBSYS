@@ -209,8 +209,21 @@ class Book(models.Model):
 
 
 class Book_Item(models.Model):
+
     def save(self, *args, **kwargs):
-        related_reserves = Book_reserve.objects.filter(book_item_book=self.)
+        related_reserves = Book_Reserve.objects.filter(book=self.book)
+        emails = []
+        for reserve in related_reserves:
+            emails.append(reserve.borrower.user.email)
+        if len(emails) > 0:
+            sent = send_mail(
+                subject ='KFUPMLIBSYS Book Reserve is Available',
+                message= f'Good News!! Your reserve for {self.book} is available in our library right now!!',
+                from_email='kfupmlibsys@yahoo.com',
+                recipient_list=emails)
+            print(f"Succesfully Sent {sent}/{str(len(emails))} considring thier reserves!")
+        return super().save(*args, **kwargs)
+
 
     bar_code = models.CharField(
         max_length=32,
