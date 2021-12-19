@@ -218,7 +218,7 @@ class Book_Item(models.Model):
         if len(emails) > 0:
             sent = send_mail(
                 subject ='KFUPMLIBSYS Book Reserve is Available',
-                message= f'Good News!! Your reserve for {self.book} is available in our library right now!!',
+                message= f'Good News!! Your reserve for Book: {self.book.book_title}, ISBN= {self.book.ISBN_code} is available in our library right now!!',
                 from_email='kfupmlibsys@yahoo.com',
                 recipient_list=emails)
             print(f"Succesfully Sent {sent}/{str(len(emails))} considring thier reserves!")
