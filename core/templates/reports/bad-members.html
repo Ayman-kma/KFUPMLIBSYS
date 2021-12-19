@@ -11,12 +11,12 @@
     <h2><a class="article-title" href="#">{{ member.member.user.first_name }}</a></h2>
     <p class="article-content">Penalty= {{ member.penalty }} Riyals</p>
     <p class="article-content">
-      <h3>Borrowed Books:</h3>
-      {% for loan in member.loans %}
-      <br>
-      {{ loan.book_item.book.book_title}}, Return Date: {{ loan.borrowed_to}}
-      {% endfor %}
-  </p>
+        <h3>Borrowed Books:</h3>
+        {% for loan in member.loans %}
+        <br>
+        {{ loan.book_item.book.book_title}}, Return Date: {{ loan.borrowed_to}}
+        {% endfor %}
+    </p>
   </div>
 </article>
 {% endfor %}
