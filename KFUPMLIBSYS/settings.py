@@ -154,10 +154,8 @@ EMAIL_PORT = 587
 # This line used to cofigure django Heroku
 django_heroku.settings(locals())
 
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    "kfupmlibsys.herokuapp.com"
-    # ...
-]
+class AllIPS(list):
+    def __contains__(self, item):
+        return True
+INTERNAL_IPS = AllIPS()
 
