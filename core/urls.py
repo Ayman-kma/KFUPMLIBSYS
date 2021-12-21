@@ -24,5 +24,6 @@ urlpatterns = [
     path("request-book", views.request_book, name= "request-book"), 
     path("before-due/", views.report_return_before_due, name= "before-due"), 
     path("bad-members", views.bad_members, name= "bad-members"), 
+    path("<str:book>/request/",views.request, name="request"),
 
 ]

@@ -251,3 +251,19 @@ def bad_members(request):
 
     }
     return render(request, 'reports/bad-members.html', context)
+
+
+def request(request, book):
+    book_instance = get_object_or_404(Book, pk=book)
+    librarian = Librarian.objects.filter(user=request.user).first()
+    home_url_list = request.build_absolute_uri().split("/")[:-2]
+    home_url = "/".join(home_url_list)
+    # trusted_libraries=["neighborlib@IAU.com", "neighbourlib@KAUST.com"]
+    trusted_libraries = ["oafsalem2000@gmail.com"]
+    sent = send_mail(
+                subject ='KFUPMLIBSYS Book Request',
+                message= f'Dear Neghibor Libraries We would like to request the following Book: {book_instance.book_title}, ISBN= {book_instance.ISBN_code} if its available with you, Thanks in advance',
+                from_email='kfupmlibsys@yahoo.com',
+                recipient_list=trusted_libraries)
+    print(f"Succesfully Sent {sent}/{str(len(trusted_libraries))}")
+    return render(request, 'core/request.html', {'book': book_instance, "home_url": home_url})
